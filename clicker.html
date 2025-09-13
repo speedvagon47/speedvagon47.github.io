@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nerolex Market - Кликер</title>
+    <style>
+        :root {
+            --main-bg-color: #0a0a0a;
+            --card-bg-color: #151515;
+            --text-color: #e0e0e0;
+            --accent-color: #6c42f5;
+            --accent-glow: 0 0 10px #6c42f5, 0 0 20px #6c42f5;
+            --danger-color: #e74c3c;
+            --success-color: #2ecc71;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--main-bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(108, 66, 245, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(108, 66, 245, 0.1) 0%, transparent 20%);
+        }
+        
+        .glow-text {
+            text-shadow: var(--accent-glow);
+        }
+        
+        nav {
+            background-color: rgba(20, 20, 20, 0.95);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--accent-color);
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent-color);
+            background-color: rgba(108, 66, 245, 0.1);
+        }
+        
+        .nav-links a.active {
+            color: var(--accent-color);
+            background-color: rgba(108, 66, 245, 0.2);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .clicker-container {
+            text-align: center;
+            padding: 2rem;
+            background-color: var(--card-bg-color);
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        
+        .clicker-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+        
+        .clicker-count {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            color: var(--success-color);
+        }
+        
+        .clicker-button {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #6c42f5, #8a6cff);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 10px 20px rgba(108, 66, 245, 0.3);
+            margin-bottom: 2rem;
+        }
+        
+        .clicker-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 25px rgba(108, 66, 245, 0.4);
+        }
+        
+        .clicker-button:active {
+            transform: scale(0.95);
+            box-shadow: 0 5px 15px rgba(108, 66, 245, 0.2);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background-color: var(--card-bg-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+        }
+        
+        .stat-label {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        .btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0.5rem;
+        }
+        
+        .btn:hover {
+            background-color: #5a32d8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 66, 245, 0.4);
+        }
+        
+        .btn:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        @keyframes coinAnimation {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        
+        .coin {
+            position: absolute;
+            font-size: 2rem;
+            animation: coinAnimation 1s forwards;
+            pointer-events: none;
+        }
+        
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .clicker-button {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">
+            <span>Nerolex Market</span>
+        </a>
+        <div class="nav-links">
+            <a href="index.html">Главная</a>
+            <a href="clicker.html" class="active">Кликер</a>
+            <a href="marketplace.html">Торговая площадка</a>
+            <a href="profile.html">Профиль</a>
+            <a href="#" class="btn" id="authBtn">Войти</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="clicker-container">
+            <h1 class="clicker-title">Nerolex Кликер</h1>
+            <div class="clicker-count" id="clickerCount">0 монет</div>
+            <button class="clicker-button" id="clickButton">КЛИКАЙ!</button>
+            <p>Нажимай на кнопку, чтобы зарабатывать монеты</p>
+            <p>Заработанные монеты можно использовать для покупки товаров на торговой площадке</p>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="clickPower">1</div>
+                <div class="stat-label">Монет за клик</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-value" id="autoClickerLevel">0</div>
+                <div class="stat-label">Уровень автокликера</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-value" id="totalClicks">0</div>
+                <div class="stat-label">Всего кликов</div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="index.html" class="btn">На главную</a>
+            <a href="marketplace.html" class="btn">Торговая площадка</a>
+            <a href="profile.html" class="btn">Мой профиль</a>
+        </div>
+    </div>
+
+    <script>
+        // Данные кликера
+        let clickerData = {
+            coins: 0,
+            clickPower: 1,
+            totalClicks: 0,
+            autoClickerLevel: 0
+        };
+        
+        let autoClickInterval = null;
+        let currentUser = null;
+
+        // Загрузка данных из localStorage
+        function loadFromStorage() {
+            const userData = JSON.parse(localStorage.getItem('nerolexUserData')) || {
+                username: "Гость",
+                balance: 0,
+                clickerData: {
+                    coins: 0,
+                    clickPower: 1,
+                    totalClicks: 0,
+                    autoClickerLevel: 0
+                }
+            };
+            
+            // Загружаем данные кликера
+            clickerData = userData.clickerData;
+            currentUser = userData;
+            
+            updateClickerUI();
+            updateAuthButton();
+            
+            // Запускаем автокликер, если он уже куплен
+            if (clickerData.autoClickerLevel > 0) {
+                startAutoClicker();
+            }
+        }
+
+        // Обновление кнопки авторизации
+        function updateAuthButton() {
+            const authBtn = document.getElementById('authBtn');
+            if (currentUser && currentUser.username !== "Гость") {
+                authBtn.textContent = currentUser.username;
+            } else {
+                authBtn.textContent = 'Войти';
+            }
+        }
+
+        // Сохранение данных в localStorage
+        function saveToStorage() {
+            const userData = JSON.parse(localStorage.getItem('nerolexUserData')) || {
+                username: "Гость",
+                balance: 0
+            };
+            
+            // Обновляем данные кликера
+            userData.clickerData = clickerData;
+            
+            // Сохраняем общий баланс (монеты из кликера + основной баланс)
+            userData.balance = clickerData.coins;
+            
+            localStorage.setItem('nerolexUserData', JSON.stringify(userData));
+        }
+
+        // Обновление интерфейса кликера
+        function updateClickerUI() {
+            document.getElementById('clickerCount').textContent = `${clickerData.coins} монет`;
+            document.getElementById('clickPower').textContent = clickerData.clickPower;
+            document.getElementById('autoClickerLevel').textContent = clickerData.autoClickerLevel;
+            document.getElementById('totalClicks').textContent = clickerData.totalClicks;
+        }
+
+        // Функция клика
+        function handleClick() {
+            // Проверяем авторизацию
+            if (!currentUser || currentUser.username === "Гость") {
+                alert('Для использования кликера необходимо авторизоваться');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Добавляем монеты
+            clickerData.coins += clickerData.clickPower;
+            clickerData.totalClicks++;
+            
+            // Создаем летящую монету
+            const coin = document.createElement('div');
+            coin.className = 'coin';
+            coin.textContent = `+${clickerData.clickPower}`;
+            coin.style.left = `${event.clientX - 20}px`;
+            coin.style.top = `${event.clientY - 20}px`;
+            document.body.appendChild(coin);
+            
+            // Удаляем монету после анимации
+            setTimeout(() => {
+                coin.remove();
+            }, 1000);
+            
+            // Сохраняем и обновляем UI
+            saveToStorage();
+            updateClickerUI();
+        }
+
+        // Запуск автокликера
+        function startAutoClicker() {
+            if (autoClickInterval) {
+                clearInterval(autoClickInterval);
+            }
+            
+            autoClickInterval = setInterval(() => {
+                if (clickerData.autoClickerLevel > 0) {
+                    clickerData.coins += clickerData.autoClickerLevel;
+                    saveToStorage();
+                    updateClickerUI();
+                }
+            }, 1000); // Каждую секунду
+        }
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFromStorage();
+            
+            // Обработчик для клика по кнопке
+            document.getElementById('clickButton').addEventListener('click', handleClick);
+            
+            // Обработчик для кнопки авторизации
+            document.getElementById('authBtn').addEventListener('click', function() {
+                window.location.href = 'index.html';
+            });
+        });
+    </script>
+</body>
+</html>

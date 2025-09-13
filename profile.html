@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nerolex Market - Профиль</title>
+    <style>
+        :root {
+            --main-bg-color: #0a0a0a;
+            --card-bg-color: #151515;
+            --text-color: #e0e0e0;
+            --accent-color: #6c42f5;
+            --accent-glow: 0 0 10px #6c42f5, 0 0 20px #6c42f5;
+            --danger-color: #e74c3c;
+            --success-color: #2ecc71;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--main-bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(108, 66, 245, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(108, 66, 245, 0.1) 0%, transparent 20%);
+        }
+        
+        .glow-text {
+            text-shadow: var(--accent-glow);
+        }
+        
+        nav {
+            background-color: rgba(20, 20, 20, 0.95);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--accent-color);
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent-color);
+            background-color: rgba(108, 66, 245, 0.1);
+        }
+        
+        .nav-links a.active {
+            color: var(--accent-color);
+            background-color: rgba(108, 66, 245, 0.2);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background-color: var(--card-bg-color);
+            border-radius: 12px;
+        }
+        
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #1a1a2e, #16213e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--accent-color);
+        }
+        
+        .user-info {
+            flex-grow: 1;
+        }
+        
+        .username {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+        }
+        
+        .balance-info {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+        
+        .balance-item {
+            background-color: rgba(30, 30, 30, 0.7);
+            padding: 1rem;
+            border-radius: 8px;
+            min-width: 150px;
+        }
+        
+        .balance-label {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-bottom: 0.5rem;
+        }
+        
+        .balance-amount {
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+        
+        .available-balance {
+            color: var(--success-color);
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(108, 66, 245, 0.3);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background-color: var(--card-bg-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+        }
+        
+        .stat-label {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        .btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0.5rem;
+        }
+        
+        .btn:hover {
+            background-color: #5a32d8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 66, 245, 0.4);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #888;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        /* Стили для товаров */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .product-card {
+            background-color: var(--card-bg-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(108, 66, 245, 0.2);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(45deg, #1a1a2e, #16213e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-size: 4rem;
+        }
+        
+        .product-info {
+            padding: 1.2rem;
+        }
+        
+        .product-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .product-description {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .product-price {
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Стили для модального окна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: var(--card-bg-color);
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+        }
+        
+        .modal h2 {
+            margin-bottom: 1.5rem;
+            color: var(--accent-color);
+        }
+        
+        .modal label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .modal input, .modal textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 6px;
+            border: 1px solid #333;
+            background-color: #222;
+            color: white;
+            margin-bottom: 1rem;
+        }
+        
+        .modal textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .balance-info {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                padding: 1.5rem;
+                width: 95%;
+            }
+            
+            .modal-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .modal-buttons button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">
+            <span>Nerolex Market</span>
+        </a>
+        <div class="nav-links">
+            <a href="index.html">Главная</a>
+            <a href="clicker.html">Кликер</a>
+            <a href="marketplace.html">Торговая площадка</a>
+            <a href="profile.html" class="active">Профиль</a>
+            <a href="#" class="btn" id="authBtn">Войти</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="profile-header">
+            <div class="avatar" id="user-avatar">N</div>
+            <div class="user-info">
+                <h1 class="username" id="username">Nerolex</h1>
+                <p id="user-email">Добро пожаловать в ваш профиль. Здесь вы можете управлять своим балансом.</p>
+                
+                <div class="balance-info">
+                    <div class="balance-item">
+                        <div class="balance-label">Доступный баланс</div>
+                        <div class="balance-amount available-balance" id="balance-amount">0 монет</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h2 class="section-title">Статистика</h2>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="total-clicks">0</div>
+                <div class="stat-label">Всего кликов</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-value" id="click-power">1</div>
+                <div class="stat-label">Монет за клик</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-value" id="auto-clicker">0</div>
+                <div class="stat-label">Уровень автокликера</div>
+            </div>
+        </div>
+        
+        <h2 class="section-title">Мои товары</h2>
+        
+        <div class="products-grid" id="user-products">
+            <!-- Товары будут загружены через JavaScript -->
+        </div>
+        
+        <div class="empty-state" id="empty-products">
+            <i>🛒</i>
+            <h3>Товаров пока нет</h3>
+            <p>Купите товары на торговой площадке, чтобы они отображались здесь</p>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <button class="btn" id="addProductBtn">Добавить товар</button>
+            <a href="index.html" class="btn">На главную</a>
+            <a href="clicker.html" class="btn">Заработать монеты</a>
+            <a href="marketplace.html" class="btn">Торговая площадка</a>
+        </div>
+    </div>
+
+    <!-- Модальное окно для добавления товара -->
+    <div id="addProductModal" class="modal">
+        <div class="modal-content">
+            <h2>Добавить товар</h2>
+            <form id="addProductForm">
+                <div>
+                    <label for="productName">Название товара</label>
+                    <input type="text" id="productName" required>
+                </div>
+                <div>
+                    <label for="productDescription">Описание</label>
+                    <textarea id="productDescription" required></textarea>
+                </div>
+                <div>
+                    <label for="productPrice">Цена</label>
+                    <input type="number" id="productPrice" required min="1">
+                </div>
+                <div>
+                    <label for="productEmoji">Эмодзи для товара</label>
+                    <input type="text" id="productEmoji" required placeholder="Например: ⚔️">
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn" id="cancelAddProduct">Отмена</button>
+                    <button type="submit" class="btn">Добавить товар</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Данные товаров (теперь загружаются из localStorage)
+        let marketplaceProducts = [];
+
+        // Загрузка данных при открытии страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            loadMarketplaceProducts();
+            setupAddProductModal();
+        });
+
+        // Загрузка товаров с торговой площадки
+        function loadMarketplaceProducts() {
+            marketplaceProducts = JSON.parse(localStorage.getItem('marketplaceProducts')) || [];
+        }
+
+        // Сохранение товаров на торговой площадке
+        function saveMarketplaceProducts() {
+            localStorage.setItem('marketplaceProducts', JSON.stringify(marketplaceProducts));
+        }
+
+        // Настройка модального окна для добавления товара
+        function setupAddProductModal() {
+            const modal = document.getElementById('addProductModal');
+            const addBtn = document.getElementById('addProductBtn');
+            const cancelBtn = document.getElementById('cancelAddProduct');
+            const form = document.getElementById('addProductForm');
+
+            addBtn.addEventListener('click', () => {
+                modal.style.display = 'flex';
+            });
+
+            cancelBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                addNewProduct();
+            });
+
+            // Закрытие модального окна при клике вне его
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        // Добавление нового товара
+        function addNewProduct() {
+            const name = document.getElementById('productName').value;
+            const description = document.getElementById('productDescription').value;
+            const price = parseInt(document.getElementById('productPrice').value);
+            const image = document.getElementById('productEmoji').value;
+
+            // Генерируем уникальный ID
+            const id = Date.now();
+
+            // Добавляем товар в массив
+            marketplaceProducts.push({
+                id,
+                name,
+                description,
+                price,
+                image
+            });
+
+            // Сохраняем товары
+            saveMarketplaceProducts();
+
+            // Закрываем модальное окно и очищаем форму
+            document.getElementById('addProductModal').style.display = 'none';
+            document.getElementById('addProductForm').reset();
+
+            alert('Товар успешно добавлен на торговую площадку!');
+        }
+
+        // Проверка статуса авторизации
+        function checkAuthStatus() {
+            const userData = JSON.parse(localStorage.getItem('nerolexUserData')) || null;
+            const authBtn = document.getElementById('authBtn');
+            
+            if (userData && userData.username !== "Гость") {
+                authBtn.textContent = userData.username;
+            } else {
+                authBtn.textContent = 'Войти';
+                // Если пользователь не авторизован, перенаправляем на главную
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Загрузка данных пользователя
+        function loadUserData() {
+            const userData = JSON.parse(localStorage.getItem('nerolexUserData')) || {
+                username: "Гость",
+                email: "",
+                balance: 0,
+                clickerData: {
+                    coins: 0,
+                    clickPower: 1,
+                    totalClicks: 0,
+                    autoClickerLevel: 0
+                },
+                purchasedItems: []
+            };
+            
+            // Обновляем интерфейс
+            document.getElementById('username').textContent = userData.username;
+            document.getElementById('user-avatar').textContent = userData.username.charAt(0);
+            document.getElementById('user-email').textContent = userData.email || "Добро пожаловать в ваш профиль. Здесь вы можете управлять своим балансом.";
+            document.getElementById('balance-amount').textContent = `${userData.balance} монет`;
+            document.getElementById('total-clicks').textContent = userData.clickerData.totalClicks;
+            document.getElementById('click-power').textContent = userData.clickerData.clickPower;
+            document.getElementById('auto-clicker').textContent = userData.clickerData.autoClickerLevel;
+            
+            // Отображаем товары пользователя
+            renderUserProducts(userData.purchasedItems || []);
+            
+            checkAuthStatus();
+        }
+
+        // Отображение товаров пользователя
+        function renderUserProducts(purchasedItems) {
+            const productsContainer = document.getElementById('user-products');
+            const emptyState = document.getElementById('empty-products');
+            
+            if (purchasedItems.length === 0) {
+                emptyState.style.display = 'block';
+                productsContainer.innerHTML = '';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            productsContainer.innerHTML = '';
+            
+            // Фильтруем товары, которые есть у пользователя
+            const userProducts = marketplaceProducts.filter(product => 
+                purchasedItems.includes(product.id)
+            );
+            
+            userProducts.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <div class="product-image">${product.image}</div>
+                    <div class="product-info">
+                        <h3 class="product-title">${product.name}</h3>
+                        <p class="product-description">${product.description}</p>
+                        <div class="product-price">
+                            <span>${product.price} монет</span>
+                        </div>
+                    </div>
+                `;
+                productsContainer.appendChild(productCard);
+            });
+        }
+
+        // Обработчик для кнопки авторизации
+        document.getElementById('authBtn').addEventListener('click', function() {
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nerolex Market - Главная</title>
+    <style>
+        :root {
+            --main-bg-color: #0a0a0a;
+            --card-bg-color: #151515;
+            --text-color: #e0e0e0;
+            --accent-color: #6c42f5;
+            --accent-glow: 0 0 10px #6c42f5, 0 0 20px #6c42f5;
+            --danger-color: #e74c3c;
+            --success-color: #2ecc71;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--main-bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(108, 66, 245, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(108, 66, 245, 0.1) 0%, transparent 20%);
+        }
+        
+        .glow-text {
+            text-shadow: var(--accent-glow);
+        }
+        
+        nav {
+            background-color: rgba(20, 20, 20, 0.95);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--accent-color);
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent-color);
+            background-color: rgba(108, 66, 245, 0.1);
+        }
+        
+        .nav-links a.active {
+            color: var(--accent-color);
+            background-color: rgba(108, 66, 245, 0.2);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .hero-section {
+            text-align: center;
+            padding: 4rem 2rem;
+            background-color: var(--card-bg-color);
+            border-radius: 12px;
+            margin-bottom: 3rem;
+        }
+        
+        .hero-title {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+        
+        .hero-description {
+            font-size: 1.2rem;
+            color: #aaa;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+        
+        .balance-card {
+            background-color: rgba(30, 30, 30, 0.7);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem auto;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .balance-label {
+            font-size: 1rem;
+            color: #aaa;
+            margin-bottom: 0.5rem;
+        }
+        
+        .balance-amount {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--success-color);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .feature-card {
+            background-color: var(--card-bg-color);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+        
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-description {
+            color: #aaa;
+        }
+        
+        .btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0.5rem;
+        }
+        
+        .btn:hover {
+            background-color: #5a32d8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 66, 245, 0.4);
+        }
+        
+        /* Модальные окна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background-color: var(--card-bg-color);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(108, 66, 245, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .modal-title {
+            font-size: 1.3rem;
+            color: var(--accent-color);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: rgba(30, 30, 30, 0.7);
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: var(--text-color);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+        }
+        
+        .auth-tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            background-color: rgba(30, 30, 30, 0.7);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .auth-tab.active {
+            border-bottom: 2px solid var(--accent-color);
+            color: var(--accent-color);
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">
+            <span>Nerolex Market</span>
+        </a>
+        <div class="nav-links">
+            <a href="index.html" class="active">Главная</a>
+            <a href="clicker.html">Кликер</a>
+            <a href="marketplace.html">Торговая площадка</a>
+            <a href="profile.html">Профиль</a>
+            <a href="#" class="btn" id="authBtn">Войти</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="hero-section">
+            <h1 class="hero-title glow-text">Nerolex Market</h1>
+            <p class="hero-description">Зарабатывайте монеты в кликере и используйте их для покупки товаров на нашей торговой площадке</p>
+            
+            <div class="balance-card">
+                <div class="balance-label">Ваш баланс</div>
+                <div class="balance-amount" id="balance-amount">0 монет</div>
+            </div>
+            
+            <div>
+                <a href="clicker.html" class="btn">Начать зарабатывать</a>
+                <a href="marketplace.html" class="btn">Торговая площадка</a>
+                <a href="profile.html" class="btn">Мой профиль</a>
+            </div>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3 class="feature-title">Кликер</h3>
+                <p class="feature-description">Зарабатывайте монеты, кликая по кнопке. Улучшайте свои показатели и увеличивайте доход.</p>
+                <a href="clicker.html" class="btn">Перейти к кликеру</a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🛒</div>
+                <h3 class="feature-title">Торговая площадка</h3>
+                <p class="feature-description">Покупайте и продавайте товары за монеты, заработанные в кликере.</p>
+                <a href="marketplace.html" class="btn">Перейти к магазину</a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🏆</div>
+                <h3 class="feature-title">Достижения</h3>
+                <p class="feature-description">Отслеживайте свой прогресс и получайте награды за достижение целей.</p>
+                <a href="profile.html" class="btn">Мой прогресс</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно авторизации -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Вход в аккаунт</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="auth-tabs">
+                    <div class="auth-tab active" id="loginTab">Вход</div>
+                    <div class="auth-tab" id="registerTab">Регистрация</div>
+                </div>
+                
+                <div class="auth-form active" id="loginForm">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" class="form-control" placeholder="Введите email">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Пароль</label>
+                        <input type="password" id="login-password" class="form-control" placeholder="Введите пароль">
+                    </div>
+                    <button class="btn" style="width: 100%;" id="loginBtn">Войти</button>
+                </div>
+                
+                <div class="auth-form" id="registerForm">
+                    <div class="form-group">
+                        <label for="register-name">Имя пользователя</label>
+                        <input type="text" id="register-name" class="form-control" placeholder="Придумайте имя">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">Email</label>
+                        <input type="email" id="register-email" class="form-control" placeholder="Введите email">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Пароль</label>
+                        <input type="password" id="register-password" class="form-control" placeholder="Придумайте пароль">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password-confirm">Подтверждение пароля</label>
+                        <input type="password" id="register-password-confirm" class="form-control" placeholder="Повторите пароль">
+                    </div>
+                    <button class="btn" style="width: 100%;" id="registerBtn">Зарегистрироваться</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Загрузка данных при открытии страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            updateBalance();
+            checkAuthStatus();
+        });
+
+        // Функция обновления баланса
+        function updateBalance() {
+            const userData = JSON.parse(localStorage.getItem('nerolexUserData')) || {
+                username: "Гость",
+                balance: 0,
+                clickerData: {
+                    clickPower: 1,
+                    autoClickerLevel: 0,
+                    coins: 0
+                }
+            };
+            
+            // Обновляем отображение баланса
+            document.getElementById('balance-amount').textContent = `${userData.balance} монет`;
+        }
+
+        // Проверка статуса авторизации
+        function checkAuthStatus() {
+            const userData = JSON.parse(localStorage.getItem('nerolexUserData')) || null;
+            const authBtn = document.getElementById('authBtn');
+            
+            if (userData && userData.username !== "Гость") {
+                authBtn.textContent = userData.username;
+            } else {
+                authBtn.textContent = 'Войти';
+            }
+        }
+
+        // Показать модальное окно авторизации
+        document.getElementById('authBtn').addEventListener('click', function() {
+            document.getElementById('authModal').classList.add('active');
+        });
+
+        // Переключение между вкладками входа и регистрации
+        document.getElementById('loginTab').addEventListener('click', function() {
+            document.getElementById('loginTab').classList.add('active');
+            document.getElementById('registerTab').classList.remove('active');
+            document.getElementById('loginForm').classList.add('active');
+            document.getElementById('registerForm').classList.remove('active');
+        });
+
+        document.getElementById('registerTab').addEventListener('click', function() {
+            document.getElementById('registerTab').classList.add('active');
+            document.getElementById('loginTab').classList.remove('active');
+            document.getElementById('registerForm').classList.add('active');
+            document.getElementById('loginForm').classList.remove('active');
+        });
+
+        // Закрытие модального окна
+        document.querySelector('.modal-close').addEventListener('click', function() {
+            document.getElementById('authModal').classList.remove('active');
+        });
+
+        // Обработка входа
+        document.getElementById('loginBtn').addEventListener('click', function() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (!email || !password) {
+                alert('Заполните все поля');
+                return;
+            }
+            
+            // В реальном приложении здесь был бы запрос к серверу
+            // Для демонстрации просто создаем пользователя
+            const userData = {
+                username: email.split('@')[0],
+                email: email,
+                balance: 1000, // Начальный баланс
+                clickerData: {
+                    clickPower: 1,
+                    autoClickerLevel: 0,
+                    coins: 0
+                },
+                purchasedItems: []
+            };
+            
+            localStorage.setItem('nerolexUserData', JSON.stringify(userData));
+            document.getElementById('authModal').classList.remove('active');
+            updateBalance();
+            checkAuthStatus();
+            
+            alert('Вход выполнен успешно!');
+        });
+
+        // Обработка регистрации
+        document.getElementById('registerBtn').addEventListener('click', function() {
+            const username = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const passwordConfirm = document.getElementById('register-password-confirm').value;
+            
+            if (!username || !email || !password || !passwordConfirm) {
+                alert('Заполните все поля');
+                return;
+            }
+            
+            if (password !== passwordConfirm) {
+                alert('Пароли не совпадают');
+                return;
+            }
+            
+            // В реальном приложении здесь был бы запрос к серверу
+            // Для демонстрации просто создаем пользователя
+            const userData = {
+                username: username,
+                email: email,
+                balance: 500, // Начальный баланс для новых пользователей
+                clickerData: {
+                    clickPower: 1,
+                    autoClickerLevel: 0,
+                    coins: 0
+                },
+                purchasedItems: []
+            };
+            
+            localStorage.setItem('nerolexUserData', JSON.stringify(userData));
+            document.getElementById('authModal').classList.remove('active');
+            updateBalance();
+            checkAuthStatus();
+            
+            alert('Регистрация прошла успешно! На ваш счет начислено 500 монет.');
+        });
+    </script>
+</body>
+</html>
